@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private InputSystem_Actions controls;
     private Rigidbody playerRb;
     private GameObject focalPoint;
+    public bool hasPowerup = false;
     void Awake()
     {
         controls = new InputSystem_Actions();
@@ -27,5 +28,16 @@ public class PlayerController : MonoBehaviour
         float forwardInput = moveInput.y;
 
         playerRb.AddForce(focalPoint.transform.forward * forwardInput * playerSpeed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"OnTriggerEnter called. other's tag was {other.tag}.");
+
+        if (other.gameObject.CompareTag("Powerup"))
+        {
+            hasPowerup = true;
+            Destroy(other.gameObject);
+        }
     }
 }
