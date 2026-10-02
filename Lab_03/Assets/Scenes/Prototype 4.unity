@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb83753f3c87354395ef7879133f860, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RotateCamera
+  rotationSpeed: 150
 --- !u!4 &187933064
 Transform:
   m_ObjectHideFlags: 0
@@ -625,6 +626,7 @@ GameObject:
   - component: {fileID: 1423339163}
   - component: {fileID: 1423339162}
   - component: {fileID: 1423339161}
+  - component: {fileID: 1423339166}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -752,6 +754,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1423339166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423339160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e359cfb23386b334090476cc89528261, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  playerSpeed: 300
 --- !u!1001 &7305732181041295649
 PrefabInstance:
   m_ObjectHideFlags: 0

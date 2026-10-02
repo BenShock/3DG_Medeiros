@@ -20,7 +20,6 @@ public class RotateCamera : MonoBehaviour
     {
         Vector2 moveInput       = controls.Player.Move.ReadValue<Vector2>();
         float horizontalInput   = moveInput.x;
-        float verticalInput     = moveInput.y;
 
         transform.Rotate(Vector3.up, horizontalInput * rotationSpeed * Time.deltaTime);
     }
