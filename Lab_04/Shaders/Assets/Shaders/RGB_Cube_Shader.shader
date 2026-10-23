@@ -2,8 +2,10 @@ Shader "Custom/RGB_Cube_Shader"
 {
    SubShader { 
       Pass { 
-         CGPROGRAM 
- 
+         HLSLPROGRAM 
+         
+         #include "UnityCG.cginc"
+
          #pragma vertex vert // vert function is the vertex shader 
          #pragma fragment frag // frag function is the fragment shader
  
@@ -36,7 +38,7 @@ Shader "Custom/RGB_Cube_Shader"
                // output parameter with semantic COLOR.
          }
  
-         ENDCG  
+         ENDHLSL
       }
    }
 }
