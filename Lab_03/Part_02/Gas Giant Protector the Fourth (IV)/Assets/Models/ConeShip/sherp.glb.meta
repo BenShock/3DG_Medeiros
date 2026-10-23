@@ -1,0 +1,110 @@
+fileFormatVersion: 2
+guid: 8fa5acb1d996c2640bb76419ffa9ebd3
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: body.004
+    second: {fileID: 2100000, guid: 784a3a21be0173d469dc39b8e4f6b6e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: body.007
+    second: {fileID: 2100000, guid: 784a3a21be0173d469dc39b8e4f6b6e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cone.004
+    second: {fileID: 2100000, guid: f565935be69692a4083403b2fa49935e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cone.007
+    second: {fileID: 2100000, guid: f565935be69692a4083403b2fa49935e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: icecream.004
+    second: {fileID: 2100000, guid: 5e12b1928c3f78e48a5b2bb37a00a41a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: icecream.007
+    second: {fileID: 2100000, guid: 5e12b1928c3f78e48a5b2bb37a00a41a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: window.004
+    second: {fileID: 2100000, guid: 37178dfc3f978d34793b77fc0f03146b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: window.007
+    second: {fileID: 2100000, guid: 37178dfc3f978d34793b77fc0f03146b, type: 2}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 804e1ce4c496647cfa3f1a1134187c71, type: 3}
+  _removeEmptyRootObjects: 1
+  _scaleFactor: 1
+  _deduplicateResources: 0
+  _deduplicatedStatistics:
+    meshCountBefore: 0
+    meshCountAfter: 0
+    textureCountBefore: 0
+    textureCountAfter: 0
+  _maximumLod: 300
+  _readWriteEnabled: 1
+  _generateColliders: 0
+  _addColliders: 0
+  _swapUvs: 0
+  _generateLightmapUVs: 0
+  _importBlendShapeNames: 1
+  _blendShapeFrameWeight:
+    _option: 0
+    _multiplier: 1
+  _importNormals: 0
+  _importTangents: 0
+  _importCamera: 2
+  _importAnimations: 2
+  _mecanimHumanoidFlip: 0
+  _nonHumanoidRootNodeName: 
+  _addAnimatorComponent: 0
+  _animationLoopTime: 1
+  _animationLoopPose: 0
+  _animationLoopSettingsPerClip: 0
+  _importMaterials: 1
+  _enableGpuInstancing: 0
+  _texturesReadWriteEnabled: 1
+  _generateMipMaps: 1
+  _useSceneNameIdentifier: 0
+  _textureCompression: -50
+  _gltfAsset: '<b>Generator: </b>Khronos glTF Blender I/O v5.1.19
+
+    <b>Version:
+    </b>2.0
+
+    
+
+    <b>Extras: </b>
+
+'
+  optimizeGameObjects: 0
+  materials:
+  - {fileID: 7134467607051890720, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: -137605206031582297, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: 2493389041813418374, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  - {fileID: -3072338108413341863, guid: 8fa5acb1d996c2640bb76419ffa9ebd3, type: 3}
+  textures: []
+  hasSceneData: 1
+  hasAnimationData: 0
+  hasMaterialData: 1
+  hasTextureData: 0
+  animations: []
+  _extensions: []
+  _textures: []
+  _mainAssetIdentifier: main asset
+  _importPlugins: []
