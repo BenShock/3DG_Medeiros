@@ -2,52 +2,123 @@ Shader "Custom/Per_Fragment_Shader"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
+        _Color ("Diffuse Material Color", Color) = (1,1,1,1)
+        _SpecColor ("Specular Material Color", Color) = (1,1,1,1)
+        _Shininess ("Shininess", Float) = 10
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 200
+        Pass {
+            Tags { "LightMode"="ForwardBase" }
 
-        CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
+            CGPROGRAM
 
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
+            #pragma vertex vert
+            #pragma fragment frag
 
-        sampler2D _MainTex;
+            #include "UnityCG.cginc"
 
-        struct Input
-        {
-            float2 uv_MainTex;
-        };
+            float4 _LightColor0;
+            float4 _Color;
+            float4 _SpecColor;
+            float _Shininess;
 
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
+            struct vertexInput {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+            };
 
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-            // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
+            struct vertexOutput {
+                float4 pos : SV_POSITION;
+                float4 col : COLOR;
+            };
 
-        void surf (Input IN, inout SurfaceOutputStandard o)
-        {
-            // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
-            o.Alpha = c.a;
+            vertexOutput vert(vertexInput input)
+            {
+                vertexOutput output;
+
+                float4x4 modelMatrix = unity_ObjectToWorld;
+                float4x4 modelMatrixInverse = unity_WorldToObject;
+
+                float3 normalDirection = normalize(mul(float4(input.normal,0.0), modelMatrixInverse).xyz);
+                // float3 normalDirection = UnityObjectToWorldNormal(input.normal);
+                float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, input.vertex).xyz);
+
+                float3 lightDirection;
+                float attenuation;
+
+                if(0.0 == _WorldSpaceLightPos0.w)
+                {
+                    attenuation = 1.0;
+                    lightDirection = normalize(_WorldSpaceLightPos0.xyz);
+                }
+                else
+                {
+                    float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - mul(modelMatrix, input.vertex).xyz;
+                    float distance = length(vertexToLightSource);
+                    attenuation = 1.0 / distance;
+                    lightDirection = normalize(vertextToLightSource);
+                }
+
+                float3 ambientLighting = UNITY_LIGHTMODEL_AMBIENT.rgb * _Color.rgb;
+                float3 diffuseReflection = attenuation * _LightColor0.rgb * _Color.rgb * max(0.0, dot(normalDirection, lightDirection));
+                float3 specularReflection;
+                if(dot(normalDirection, lightDirection) < 0.0)
+                {
+                    specularReflection = float3(0.0,0.0,0.0);
+                }
+                else
+                {
+                    specularReflection = 
+                    attenuation * 
+                    _LightColor0.rgb * 
+                    _SpecColor.rgb * 
+                    pow(max(0.0, dot(reflect(-lightDirection, normalDirection), viewDirection)), _Shininess);
+                }
+
+                output.col = float4(ambientLighting + diffuseReflection + specularReflection, 1.0);
+                output.pos = UnityObjectToClipPos(input.vertex);
+                return output;
+            }
+
+            float4 frag(vertexOutput input) : COLOR
+            {
+                return input.col;
+            }
+
+            ENDCG
         }
-        ENDCG
+
+        Pass {
+
+            Tags { "LightMode" = "ForwardAdd" }
+
+            Blend One One
+
+            CGPROGRAM
+
+            #pragma vertex vert  
+            #pragma fragment frag 
+ 
+            #include "UnityCG.cginc"
+
+            float4 _LightColor0;
+            float4 _Color;
+            float4 _SpecColor;
+            float _Shininess;
+
+            struct vertexInput {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+            };
+
+            struct vertexOutput {
+                float4 pos : SV_POSITION;
+                float4 col : COLOR;
+            };
+
+            // Resume Here
+        }
     }
     FallBack "Diffuse"
 }
