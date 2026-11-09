@@ -57,7 +57,7 @@ Shader "Custom/Per_Fragment_Shader"
                     float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - mul(modelMatrix, input.vertex).xyz;
                     float distance = length(vertexToLightSource);
                     attenuation = 1.0 / distance;
-                    lightDirection = normalize(vertextToLightSource);
+                    lightDirection = normalize(vertexToLightSource); 
                 }
 
                 float3 ambientLighting = UNITY_LIGHTMODEL_AMBIENT.rgb * _Color.rgb;
@@ -117,7 +117,19 @@ Shader "Custom/Per_Fragment_Shader"
                 float4 col : COLOR;
             };
 
-            // Resume Here
+            vertexOutput vert(vertexInput input)
+            {
+                vertexOutput output;
+                output.pos = UnityObjectToClipPos(input.vertex);
+                output.col = float4(1,1,1,1); 
+                return output;
+            }
+
+            float4 frag(vertexOutput input) : COLOR
+            {
+                return float4(1,1,1,1); 
+            }
+            ENDCG
         }
     }
     FallBack "Diffuse"
