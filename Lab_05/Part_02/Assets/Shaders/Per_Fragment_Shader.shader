@@ -5,6 +5,7 @@ Shader "Custom/Per_Fragment_Shader"
         _Color ("Diffuse Material Color", Color) = (1,1,1,1)
         _SpecColor ("Specular Material Color", Color) = (1,1,1,1)
         _Shininess ("Shininess", Float) = 10
+        _MainTex ("Texture Image", 2D) = "white" {}
     }
     SubShader
     {
@@ -16,6 +17,8 @@ Shader "Custom/Per_Fragment_Shader"
             #pragma fragment frag
             #include "UnityCG.cginc"
 
+            uniform sampler2D _MainTex;
+
             float4 _LightColor0;
             float4 _Color;
             float4 _SpecColor;
@@ -24,16 +27,20 @@ Shader "Custom/Per_Fragment_Shader"
             struct vertexInput {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
+                float4 texcoord : TEXCOORD0;
             };
 
             struct vertexOutput {
                 float4 pos : SV_POSITION;
                 float4 col : COLOR;
+                float4 tex : TEXCOORD0;
             };
 
             vertexOutput vert(vertexInput input)
             {
                 vertexOutput output;
+
+                output.tex = input.texcoord;
 
                 float4x4 modelMatrix = unity_ObjectToWorld;
                 float4x4 modelMatrixInverse = unity_WorldToObject;
@@ -73,12 +80,14 @@ Shader "Custom/Per_Fragment_Shader"
 
                 output.col = float4(ambientLighting + diffuseReflection + specularReflection, 1.0);
                 output.pos = UnityObjectToClipPos(input.vertex);
+
                 return output;
             }
 
             float4 frag(vertexOutput input) : COLOR
             {
-                return input.col;
+                // return input.col;
+                return tex2D(_MainTex, input.tex.xy);
             }
             ENDCG
         }
@@ -91,6 +100,10 @@ Shader "Custom/Per_Fragment_Shader"
             #pragma vertex vert  
             #pragma fragment frag 
             #include "UnityCG.cginc"
+
+            uniform sampler2D _MainTex;
+            uniform float4 _MainTex_ST;
+
 
             float4 _LightColor0;
             float4 _Color;
