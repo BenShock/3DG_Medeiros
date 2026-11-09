@@ -12,10 +12,8 @@ Shader "Custom/Per_Fragment_Shader"
             Tags { "LightMode"="ForwardBase" }
 
             CGPROGRAM
-
             #pragma vertex vert
             #pragma fragment frag
-
             #include "UnityCG.cginc"
 
             float4 _LightColor0;
@@ -41,7 +39,6 @@ Shader "Custom/Per_Fragment_Shader"
                 float4x4 modelMatrixInverse = unity_WorldToObject;
 
                 float3 normalDirection = normalize(mul(float4(input.normal,0.0), modelMatrixInverse).xyz);
-                // float3 normalDirection = UnityObjectToWorldNormal(input.normal);
                 float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, input.vertex).xyz);
 
                 float3 lightDirection;
@@ -61,7 +58,9 @@ Shader "Custom/Per_Fragment_Shader"
                 }
 
                 float3 ambientLighting = UNITY_LIGHTMODEL_AMBIENT.rgb * _Color.rgb;
+                
                 float3 diffuseReflection = attenuation * _LightColor0.rgb * _Color.rgb * max(0.0, dot(normalDirection, lightDirection));
+                
                 float3 specularReflection;
                 if(dot(normalDirection, lightDirection) < 0.0)
                 {
@@ -69,11 +68,7 @@ Shader "Custom/Per_Fragment_Shader"
                 }
                 else
                 {
-                    specularReflection = 
-                    attenuation * 
-                    _LightColor0.rgb * 
-                    _SpecColor.rgb * 
-                    pow(max(0.0, dot(reflect(-lightDirection, normalDirection), viewDirection)), _Shininess);
+                    specularReflection = attenuation * _LightColor0.rgb * _SpecColor.rgb * pow(max(0.0, dot(reflect(-lightDirection, normalDirection), viewDirection)), _Shininess);
                 }
 
                 output.col = float4(ambientLighting + diffuseReflection + specularReflection, 1.0);
@@ -85,21 +80,16 @@ Shader "Custom/Per_Fragment_Shader"
             {
                 return input.col;
             }
-
             ENDCG
         }
 
         Pass {
-
             Tags { "LightMode" = "ForwardAdd" }
-
             Blend One One
 
             CGPROGRAM
-
             #pragma vertex vert  
             #pragma fragment frag 
- 
             #include "UnityCG.cginc"
 
             float4 _LightColor0;
@@ -117,27 +107,52 @@ Shader "Custom/Per_Fragment_Shader"
                 float4 col : COLOR;
             };
 
-             vertexOutput vert(vertexInput input) 
-             {
+            vertexOutput vert(vertexInput input) 
+            {
                 vertexOutput output;
  
                 float4x4 modelMatrix = unity_ObjectToWorld;
-                float4x4 modelMatrixInverse = unity_WorldToObject; 
- 
+                float4x4 modelMatrixInverse = unity_WorldToObject;
+
                 float3 normalDirection = normalize(mul(float4(input.normal, 0.0), modelMatrixInverse).xyz);
-                float3 lightDirection = normalize(_WorldSpaceLightPos0.xyz);
- 
-                float3 diffuseReflection = _LightColor0.rgb * _Color.rgb
-                   * max(0.0, dot(normalDirection, lightDirection));
- 
-                output.col = float4(diffuseReflection, 1.0);
+                float3 viewDirection = normalize(_WorldSpaceCameraPos - mul(modelMatrix, input.vertex).xyz);
+                
+                float3 lightDirection;
+                float attenuation;
+
+                if (0.0 == _WorldSpaceLightPos0.w) 
+                {
+                    attenuation = 1.0; 
+                    lightDirection = normalize(_WorldSpaceLightPos0.xyz);
+                } 
+                else 
+                {
+                    float3 vertexToLightSource = _WorldSpaceLightPos0.xyz - mul(modelMatrix, input.vertex).xyz;
+                    float distance = length(vertexToLightSource);
+                    attenuation = 1.0 / distance; 
+                    lightDirection = normalize(vertexToLightSource);
+                }
+
+                float3 diffuseReflection = attenuation * _LightColor0.rgb * _Color.rgb * max(0.0, dot(normalDirection, lightDirection));
+
+                float3 specularReflection;
+                if (dot(normalDirection, lightDirection) < 0.0) 
+                {
+                    specularReflection = float3(0.0, 0.0, 0.0); 
+                }
+                else 
+                {
+                    specularReflection = attenuation * _LightColor0.rgb * _SpecColor.rgb * pow(max(0.0, dot(reflect(-lightDirection, normalDirection), viewDirection)), _Shininess);
+                }
+
+                output.col = float4(diffuseReflection + specularReflection, 1.0);
                 output.pos = UnityObjectToClipPos(input.vertex);
                 return output;
              }
  
             float4 frag(vertexOutput input) : COLOR
             {
-            return input.col;
+                return input.col;
             }
 
             ENDCG
